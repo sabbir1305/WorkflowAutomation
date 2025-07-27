@@ -13,5 +13,11 @@ namespace Workflow.Infrastructure
         public WorkflowDbContext(DbContextOptions<WorkflowDbContext> options) : base(options) { }
 
         public DbSet<WorkflowDefinition> Workflows => Set<WorkflowDefinition>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            // Seed data will be added at runtime using a dedicated service for best practices.
+        }
     }
 }

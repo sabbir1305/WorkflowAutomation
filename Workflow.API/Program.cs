@@ -13,6 +13,13 @@ builder.Services.AddDbContext<WorkflowDbContext>(opt =>
 
 var app = builder.Build();
 
+// Seed database at startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<WorkflowDbContext>();
+    Workflow.Infrastructure.DbSeeder.SeedAsync(db).GetAwaiter().GetResult();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

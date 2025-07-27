@@ -13,7 +13,7 @@ using Workflow.Infrastructure;
 namespace Workflow.Infrastructure.Migrations
 {
     [DbContext(typeof(WorkflowDbContext))]
-    [Migration("20250727113020_InitialCreate")]
+    [Migration("20250727113754_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
