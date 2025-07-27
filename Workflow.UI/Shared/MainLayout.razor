@@ -1,25 +1,31 @@
-﻿@inherits LayoutComponentBase
-@using MudBlazor
+﻿
+@inherits LayoutComponentBase
 
-<MudLayout>
-    <MudAppBar Color="Color.Primary" Elevation="4">
-        <MudText Typo="Typo.h6" Class="ml-4">Workflow Automation</MudText>
-        <MudTabs Class="ml-4">
-            <MudTabPanel Text="Workflows" Icon="@Icons.Material.Filled.List" Link="/" />
-            <MudTabPanel Text="Create" Icon="@Icons.Material.Filled.Add" Link="/create" />
-        </MudTabs>
-    </MudAppBar>
 
-    <MudDrawer Open="true" ClipMode="DrawerClipMode.Always">
-        <MudNavMenu>
-            <MudNavLink Href="/" Icon="@Icons.Material.Filled.List">Workflows</MudNavLink>
-            <MudNavLink Href="/create" Icon="@Icons.Material.Filled.Add">Create Workflow</MudNavLink>
-        </MudNavMenu>
-    </MudDrawer>
 
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.False" Class="p-4">
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+
+<div class="d-flex min-vh-100">
+    <nav class="bg-primary text-white d-flex flex-column align-items-start p-4" style="width:260px; min-width:220px;">
+        <a class="navbar-brand d-flex align-items-center fw-bold text-white mb-4" href="/">
+            <i class="bi bi-diagram-3-fill fs-3 me-2"></i> Workflow Automation
+        </a>
+        <ul class="nav flex-column w-100">
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white active" aria-current="page" href="/">
+                    <i class="bi bi-card-list me-1"></i> Workflows
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="/create">
+                    <i class="bi bi-plus-circle me-1"></i> Create Workflow
+                </a>
+            </li>
+        </ul>
+        <a class="btn btn-light fw-bold d-flex align-items-center mt-4" href="/create">
+            <i class="bi bi-plus-circle me-1"></i> New Workflow
+        </a>
+    </nav>
+    <main class="flex-grow-1 py-4 px-4" style="background:#f8f9fa;">
+        @Body
+    </main>
+</div>
