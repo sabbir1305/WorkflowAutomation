@@ -9,7 +9,7 @@ builder.Services.AddMudServices(); // Add MudBlazor
 
 builder.Services.AddHttpClient("API", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:5001");
+    client.BaseAddress = new Uri("https://localhost:7106");
 });
 builder.Services.AddScoped<WorkflowService>();
 
