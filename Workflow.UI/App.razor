@@ -2,15 +2,13 @@
 // Workflow.UI/App.razor
 // ============================
 @using MudBlazor
-<MudThemeProvider>
-    <Router AppAssembly="@typeof(Program).Assembly">
-        <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        </Found>
-        <NotFound>
-            <MudPaper Elevation="2" Class="p-4">
-                <MudText Typo="Typo.h5">Page not found</MudText>
-            </MudPaper>
-        </NotFound>
-    </Router>
-</MudThemeProvider>
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <MudPaper Elevation="2" Class="p-4">
+            <MudText Typo="Typo.h5">Page not found</MudText>
+        </MudPaper>
+    </NotFound>
+</Router>
