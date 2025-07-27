@@ -11,6 +11,6 @@ namespace Workflow.Core.Models
         public Guid Id { get; init; }
         public required string Name { get; init; }
         public required string TriggerType { get; init; }
-        public List<ActionDefinition> Actions { get; init; } = [];
+        public List<ActionDefinition> Actions { get; init; } = new();
     }
 }

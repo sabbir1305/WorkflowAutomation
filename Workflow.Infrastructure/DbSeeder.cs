@@ -26,7 +26,11 @@ namespace Workflow.Infrastructure
                         {
                             Id = actionId,
                             ActionType = "Email",
-                            Parameters = new Dictionary<string, string> { { "to", "user@example.com" }, { "subject", "Hello" } }
+                            Parameters = new List<ActionParameter>
+                            {
+                                new ActionParameter { Key = "to", Value = "user@example.com" },
+                                new ActionParameter { Key = "subject", Value = "Hello" }
+                            }
                         }
                     }
                 };

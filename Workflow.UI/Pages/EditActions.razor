@@ -1,0 +1,107 @@
+@page "/edit-actions/{Id:guid}"
+@using Workflow.UI.Models
+@using Workflow.UI.Services
+@inject WorkflowService WorkflowService
+@inject NavigationManager NavigationManager
+
+<h3 class="mb-4">Edit Actions for Workflow</h3>
+
+@if (workflow == null)
+{
+    <div class="d-flex justify-content-center align-items-center" style="height: 120px;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Actions</h5>
+            <EditForm Model="workflow" OnValidSubmit="HandleValidSubmit">
+                @for (int i = 0; i < workflow.Actions.Count; i++)
+                {
+                    <div class="border rounded p-3 mb-3 bg-light">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>Action @(i + 1): @workflow.Actions[i].Type</strong>
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => RemoveAction(i)"><i class="bi bi-trash"></i> Remove</button>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Type</label>
+                            <InputText class="form-control" @bind-Value="workflow.Actions[i].Type" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Parameters</label>
+                            @foreach (var param in workflow.Actions[i].Parameters)
+                            {
+                                <div class="input-group mb-1">
+                                    <InputText class="form-control" @bind-Value="param.Key" placeholder="Key" />
+                                    <InputText class="form-control" @bind-Value="param.Value" placeholder="Value" />
+                                    <button type="button" class="btn btn-outline-danger" @onclick="() => RemoveParameter(i, param)"><i class="bi bi-x"></i></button>
+                                </div>
+                            }
+                            <button type="button" class="btn btn-outline-success btn-sm" @onclick="() => AddParameter(i)"><i class="bi bi-plus"></i> Add Parameter</button>
+                        </div>
+                    </div>
+                }
+                <button type="button" class="btn btn-outline-primary mb-3" @onclick="AddAction"><i class="bi bi-plus-circle"></i> Add Action</button>
+                <button type="submit" class="btn btn-primary">Save Actions</button>
+                <a href="/edit/@workflow.Id" class="btn btn-secondary ms-2">Back</a>
+            </EditForm>
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private WorkflowModel? workflow;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        workflow = await WorkflowService.GetWorkflowByIdAsync(Id);
+        if (workflow == null)
+        {
+            errorMessage = "Workflow not found.";
+        }
+    }
+
+    private void AddAction()
+    {
+        workflow?.Actions.Add(new ActionModel { Type = "", Parameters = new List<ActionParameter>() });
+    }
+
+    private void RemoveAction(int index)
+    {
+        workflow?.Actions.RemoveAt(index);
+    }
+
+    private void AddParameter(int actionIndex)
+    {
+        workflow?.Actions[actionIndex].Parameters.Add(new ActionParameter { Id = Guid.NewGuid(), Key = "", Value = "" });
+    }
+
+    private void RemoveParameter(int actionIndex, ActionParameter param)
+    {
+        workflow?.Actions[actionIndex].Parameters.Remove(param);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (workflow != null && await WorkflowService.UpdateWorkflowAsync(workflow))
+        {
+            NavigationManager.NavigateTo($"/edit/{workflow.Id}");
+        }
+        else
+        {
+            errorMessage = "Failed to update actions.";
+        }
+    }
+}
