@@ -1,6 +1,57 @@
-﻿// ============================
-// Workflow.UI/Pages/Index.razor
-// ============================
-@page "/"
-<h3>Workflow Dashboard</h3>
-<p>Welcome to the Workflow Automation Platform!</p>
+﻿@page "/"
+@using Workflow.UI.Models
+@using Workflow.UI.Services
+@inject WorkflowService WorkflowService
+
+<MudPaper Elevation="2" Class="p-4">
+    <MudText Typo="Typo.h5">Workflows</MudText>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"
+               Href="/create" Class="mb-4 mt-2">
+        Create Workflow
+    </MudButton>
+
+    @if (workflows is null)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (workflows.Count == 0)
+    {
+        <MudText>No workflows found.</MudText>
+    }
+    else
+    {
+        <MudTable Items="@workflows" Hover="true" Dense="true">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Trigger</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Trigger">@context.TriggerType</MudTd>
+                <MudTd>
+                    <MudButton Color="Color.Error" Variant="Variant.Outlined"
+                               StartIcon="@Icons.Material.Filled.Delete"
+                               OnClick="() => DeleteWorkflow(context.Id)">
+                        Delete
+                    </MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudPaper>
+
+@code {
+    private List<WorkflowModel>? workflows;
+
+    protected override async Task OnInitializedAsync()
+    {
+        workflows = await WorkflowService.GetWorkflowsAsync();
+    }
+
+    private async Task DeleteWorkflow(Guid id)
+    {
+        if (await WorkflowService.DeleteWorkflowAsync(id))
+            workflows = await WorkflowService.GetWorkflowsAsync();
+    }
+}

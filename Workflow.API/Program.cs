@@ -50,6 +50,15 @@ app.MapPost("/workflows", async (WorkflowDbContext db, Workflow.Core.Models.Work
     return Results.Created($"/workflows/{wf.Id}", wf);
 });
 
+app.MapDelete("/workflows/{id}", async (WorkflowDbContext db, Guid id) =>
+{
+    var wf = await db.Workflows.FindAsync(id);
+    if (wf is null) return Results.NotFound();
+    db.Workflows.Remove(wf);
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
 
 app.Run();
 

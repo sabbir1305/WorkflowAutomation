@@ -1,19 +1,21 @@
 ﻿@inherits LayoutComponentBase
+@using MudBlazor
 
-<PageTitle>Workflow.UI</PageTitle>
+<MudLayout>
+    <MudAppBar Color="Color.Primary" Elevation="4">
+        <MudText Typo="Typo.h6" Class="ml-4">Workflow Automation</MudText>
+    </MudAppBar>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <MudDrawer Open="true" ClipMode="DrawerClipMode.Always">
+        <MudNavMenu>
+            <MudNavLink Href="/" Icon="@Icons.Material.Filled.List">Workflows</MudNavLink>
+            <MudNavLink Href="/create" Icon="@Icons.Material.Filled.Add">Create Workflow</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.False" Class="p-4">
             @Body
-        </article>
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

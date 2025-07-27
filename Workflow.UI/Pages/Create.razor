@@ -1,0 +1,32 @@
+﻿@page "/create"
+@using Workflow.UI.Services
+@using Workflow.UI.Models
+@inject WorkflowService WorkflowService
+@inject NavigationManager NavigationManager
+
+<MudPaper Elevation="2" Class="p-4">
+    <MudText Typo="Typo.h5">Create Workflow</MudText>
+
+    <MudForm @ref="form" OnValidSubmit="CreateWorkflow">
+        <MudTextField @bind-Value="workflow.Name" Label="Workflow Name" Required="true" />
+        <MudTextField @bind-Value="workflow.TriggerType" Label="Trigger Type" Required="true" />
+
+        <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mt-3">
+            Save
+        </MudButton>
+        <MudButton Variant="Variant.Text" Color="Color.Secondary" Href="/" Class="mt-3 ml-2">
+            Cancel
+        </MudButton>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private WorkflowModel workflow = new();
+    private MudForm? form;
+
+    private async Task CreateWorkflow()
+    {
+        if (await WorkflowService.CreateWorkflowAsync(workflow))
+            NavigationManager.NavigateTo("/");
+    }
+}
