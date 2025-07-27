@@ -62,8 +62,21 @@ app.MapPost("/workflows", async (WorkflowDbContext db, Workflow.Core.Models.Work
 
 app.MapPut("/workflows/{id}", async (WorkflowDbContext db, Guid id, Workflow.Core.Models.WorkflowDefinition updatedWf) =>
 {
-    var wf = await db.Workflows.Include(x => x.Actions).ThenInclude(a => a.Parameters).FirstOrDefaultAsync(x => x.Id == id);
+    var wf = await db.Workflows
+        .AsNoTracking()
+        .Include(x => x.Actions)
+        .ThenInclude(a => a.Parameters)
+        .FirstOrDefaultAsync(x => x.Id == id);
     if (wf is null) return Results.NotFound();
+
+    // Detach all tracked ActionDefinitions and ActionParameters
+    var trackedActions = db.ChangeTracker.Entries<Workflow.Core.Models.ActionDefinition>().ToList();
+    foreach (var entry in trackedActions)
+        entry.State = EntityState.Detached;
+    var trackedParams = db.ChangeTracker.Entries<Workflow.Core.Models.ActionParameter>().ToList();
+    foreach (var entry in trackedParams)
+        entry.State = EntityState.Detached;
+
     var newWf = wf with
     {
         Name = updatedWf.Name,
